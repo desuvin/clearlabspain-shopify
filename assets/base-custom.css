@@ -1,0 +1,33 @@
+/* custom */
+.header__inline-menu {
+  position: absolute;
+  left: 50%;
+  transform:
+  translateX(-50%);
+} 
+
+
+/* body, .color-scheme-1, .color-scheme-2, .color-scheme-3, .color-scheme-4, .color-scheme-5, .color-scheme-a1527b5a-eba9-4bfa-a015-ea5d1641caac {
+        color: rgba(var(--color-foreground), 0.75);
+        background-color: rgb(var(--color-background));
+} */
+#MainContent, .shopify-section{
+  background-color: #EFF5F8;
+}
+
+body .color-scheme-a1527b5a-eba9-4bfa-a015-ea5d1641caac{
+    background-color: #EFF5F8;
+}
+._1fragem1y{
+  display: none !important;
+}
+._1fragemlj{
+  display: none !important;
+}
+
+.total-line--subtotal, 
+.total-line--shipping, 
+.total-line--taxes, 
+.total-line--duties {
+    display: none;
+}

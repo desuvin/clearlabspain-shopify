@@ -1,0 +1,107 @@
+{
+  "article": [],
+  "blog": [],
+  "brand": [],
+  "collection": [
+    {
+      "key": "customer_group",
+      "namespace": "custom",
+      "name": "Customer Group",
+      "description": "",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "display_name",
+      "namespace": "custom",
+      "name": "Display Name",
+      "description": "",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "card_image",
+      "namespace": "custom",
+      "name": "Card Image",
+      "description": "",
+      "type": {
+        "name": "file_reference",
+        "category": "REFERENCE"
+      }
+    }
+  ],
+  "company": [],
+  "company_location": [],
+  "location": [],
+  "market": [],
+  "order": [],
+  "page": [],
+  "product": [
+    {
+      "key": "power",
+      "namespace": "custom",
+      "name": "Power",
+      "description": "Power Description",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "display_name",
+      "namespace": "custom",
+      "name": "Display Name",
+      "description": "Display Name of Product",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "specification",
+      "namespace": "custom",
+      "name": "Specification",
+      "description": "",
+      "type": {
+        "name": "json",
+        "category": "JSON"
+      }
+    },
+    {
+      "key": "color-pattern",
+      "namespace": "shopify",
+      "name": "Color",
+      "description": "Defines the primary color or pattern, such as blue or striped",
+      "type": {
+        "name": "list.metaobject_reference",
+        "category": "REFERENCE"
+      }
+    },
+    {
+      "key": "boxes",
+      "namespace": "custom",
+      "name": "Boxes",
+      "description": "",
+      "type": {
+        "name": "single_line_text_field",
+        "category": "TEXT"
+      }
+    },
+    {
+      "key": "color_swatches",
+      "namespace": "custom",
+      "name": "Color Swatches",
+      "description": "Color Swatches of the product",
+      "type": {
+        "name": "json",
+        "category": "JSON"
+      }
+    }
+  ],
+  "variant": [],
+  "shop": []
+}

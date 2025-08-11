@@ -1,0 +1,205 @@
+{{ 'clsg-modal.css' | asset_url | stylesheet_tag }}
+{{ 'tailwind-clsg.css' | asset_url | stylesheet_tag }}
+{{ 'clsg-modal-checkout.css' | asset_url | stylesheet_tag }}
+
+{% assign text_select_address = "Select Address" %} 
+{% assign text_use_different_address = "Use Differernt Address" %}
+{% assign text_shipping_address = "Shipping Address" %}
+{% assign text_invoice_message = "Invoice will be issued seperately" %}
+{% if shop.locale == "es" %}
+  {% assign text_select_address = "Dirección" %}
+  {% assign text_use_different_address = "Usar otra dirección" %}
+  {% assign text_shipping_address = "Dirección de envío" %}
+  {% assign text_invoice_message = "La factura se emitirá por separado" %}
+{% endif %}
+
+
+<div class="clsg-modal flex items-center justify-center min-h-screen bg-gray-100 clsg-checkout" id="clsg-checkout">
+  <div class="clsg-modal-container justify-self-center clsg-checkout-modal-container">
+    <div class="clsg-modal-header">
+      <span class="clsg-close-button">
+        {{- 'close-button.svg' | inline_asset_content -}}
+      </span>
+      <div class="div-text">
+        <h1>Account</h1>
+        {%- if customer -%}
+          <p>{{ customer.email }}</p>
+        {% endif %}
+        </div>
+    </div>
+    <div class="clsg-modal-content">
+      <div class="div-selection-address">
+        {% assign locale_country = '' %}
+        <!-- Realizar pedido -->
+        {% assign checkout_button_text = ''  %}
+        {% if shop.locale == "es" %}
+          {% assign locale_country = 'España' %}
+          {% assign checkout_button_text = 'Realizar Pedido' %}
+        {% elsif shop.locale == "en" %}
+          {% assign locale_country = 'Spain' %}
+          {% assign checkout_button_text = 'Place Order' %}
+        {% endif %}
+
+        <div class="div-text-shipping">
+          <h5>{{ text_select_address }}</h5>
+          <h5 class="new-address">{{ text_use_different_address }}</h5>
+          <!-- <a href="#" class="display-show-trigger" data-container-target="container-new-address">Use a different address</a> -->
+        </div>
+        <div class="select">
+          <select class="select__select shipping-selector" id="selection-shipping" onchange="setShipping()">
+            {% for address in customer.addresses %}
+              {% comment %} {%- if address.country != locale_country -%}
+                {% continue %}
+              {% endif %} {% endcomment %}
+              <option 
+                data-addressname="{{ address.name }}"
+                data-addressaddress1="{{ address.address1 }}"
+                data-addressstreet="{{ address.street }}"
+                data-addresscity="{{ address.city }}"
+                data-addressprovince="{{ address.province }}"
+                data-addresszip="{{ address.zip }}"
+                data-addresscountry="{{ address.country_code | upcase }}"
+                data-addressfirstname="{{ address.first_name }}"
+                data-addresslastname="{{ address.last_name }}"
+                >
+                {{ address.name }}, {{ address.address1 }}, {{ address.street }}
+              </option>
+              {% endfor %}
+          </select>
+          <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+            <use href="#icon-caret" />
+          </svg>
+        </div>
+        <div id="checkout-div-result">
+          <span id="checkout-status"></span> 
+        </div>
+          <div class="div-selected-address">
+            <h1>{{ text_shipping_address }}</h1>
+            <label>
+              <strong>
+              <span id="selected-name"></span>
+              <span id="selected-address1"></span>, 
+              <span id="selected-street"></span></strong><br>
+              <span id="selected-city">{{ address.city }}</span>, 
+              <span id="selected-province">{{ address.province }}</span>,
+              <span id="selected-zip">{{ address.zip }}</span>, 
+              <span id="selected-country">{{ address.country_code | upcase }}</span>              
+              <span id="selected-firstname" style="display:none;">{{ address.first_name }}</span>
+              <span id="selected-lastname" style="display:none;">{{ address.last_name }}</span>
+            </label>
+          </div>
+        <div class="checkout-note">
+          <span class="checkout-note-text">
+            {{ text_invoice_message }}
+          </span>
+        </div>
+        <div class="customer div-button-checkout">
+          <button id="btnCheckout">{{ checkout_button_text }}</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% render 'clsg-address-new' %}
+
+<script>
+  const shipping = document.getElementById('selection-shipping');
+  const selName = document.getElementById('selected-name');
+  const selAddress1 = document.getElementById('selected-address1');
+  const selStreet = document.getElementById('selected-street');
+  const selCity = document.getElementById('selected-city');
+  const selProvince = document.getElementById('selected-province');
+  const selZip = document.getElementById('selected-zip');
+  const selCountry = document.getElementById('selected-country');
+  const selFirstName = document.getElementById('selected-firstname');
+  const selLastName = document.getElementById('selected-lastname');
+  // modal
+  var modal = document.querySelector(".clsg-checkout");
+  var trigger = document.querySelector(".trigger");
+  var closeButton = document.querySelector(".clsg-close-button");
+  // var cancelButton = document.querySelector(".clsg-cancel-button");
+
+  const checkoutStatus = document.getElementById('checkout-status');
+  const uploadingStatus = `{{- 'clsg-loading-spinner.svg' | inline_asset_content -}} Uploading...`;
+  const uploadingStatusColor = '#E6E6E6';
+  const completedStatus = `{{- 'clsg-check.svg' | inline_asset_content -}} Address successfully added`;
+  const completedStatusColor = '#D0E6C2';
+  const completedCheckout = `{{- 'clsg-check.svg' | inline_asset_content -}} Order placed successfully`;
+    
+  function toggleModal() {
+    modal.classList.toggle("show-modal");
+  }
+    
+  function windowOnClick(event) {
+    if (event.target === modal) {
+      toggleModal();
+    }
+  }
+    
+  function hideModal(){
+    modal.classList.remove("show-modal");
+  }
+    
+  trigger.addEventListener("click", toggleModal);
+  closeButton.addEventListener("click", toggleModal);  
+  // cancelButton.addEventListener("click", toggleModal);
+  modal.addEventListener("click", windowOnClick);
+  // end modal
+  
+
+  document.addEventListener('DOMContentLoaded', function() {
+    setShipping();
+  });
+  // selected address
+  function setShipping(){
+
+    const selectedOption = shipping.options[shipping.selectedIndex];
+    const shippingName = selectedOption.getAttribute('data-addressname');
+    const shippingAddress = selectedOption.getAttribute('data-addressaddress1');
+    const shippingStreet = selectedOption.getAttribute('data-addressstreet');
+    const shippingCity = selectedOption.getAttribute('data-addresscity');
+    const shippingProvince = selectedOption.getAttribute('data-addressprovince');
+    const shippingZip = selectedOption.getAttribute('data-addresszip');
+    const shippingCountry = selectedOption.getAttribute('data-addresscountry');
+    const shippingFirstName = selectedOption.getAttribute('data-addressfirstname');
+    const shippingLastName = selectedOption.getAttribute('data-addresslastname');
+
+    selName.innerHTML = shippingName;
+    selAddress1.innerHTML = shippingAddress;
+    selStreet.innerHTML = shippingStreet;
+    selCity.innerHTML = shippingCity;
+    selProvince.innerHTML = shippingProvince;
+    selZip.innerHTML = shippingZip;
+    selCountry.innerHTML = shippingCountry;
+    selFirstName.innerHTML = shippingFirstName;
+    selLastName.innerHTML = shippingLastName;
+
+    
+    selectedAddress = {
+      address1:shippingAddress,
+      street:shippingStreet,
+      city:shippingCity,
+      province:shippingProvince,
+      zip:shippingZip,
+      country:shippingCountry,
+      first_name:shippingFirstName,
+      last_name:shippingLastName,                
+    };
+
+  }
+
+  function updateStatus(divElement, divContent, divColor){
+    if(divElement){
+      divElement.innerHTML = divContent;
+      divElement.style.visibility = 'visible';
+      if(divColor){
+        divElement.style.backgroundColor = divColor;
+      }
+    }
+  }
+
+</script>
+
+<script src="{{ 'clsg-checkout.js' | asset_url }}" defer></script>

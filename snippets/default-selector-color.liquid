@@ -1,0 +1,423 @@
+{% comment %} {{ 'custom.css' | asset_url | stylesheet_tag }}
+{{ 'swatch.css' | asset_url | stylesheet_tag }}
+{{ 'promo-box-new.css' | asset_url | stylesheet_tag }}
+{{ 'card-product-new.css' | asset_url | stylesheet_tag }}
+{{ 'share.css' | asset_url | stylesheet_tag }}
+ {% endcomment %}
+ {{ 'swatch.css' | asset_url | stylesheet_tag }}
+ {{ 'custom-cart-modal.css' | asset_url | stylesheet_tag }}
+ {{ 'tooltip.css' | asset_url | stylesheet_tag }}
+<div>
+              {% for tag in product.tags %}
+                    {% assign checktag = tag  %}
+              {% endfor %}       
+
+  <!-- {{ checktag }} -->
+  <!-- {{ product.metafields.custom.color_swatches.value }} -->
+  <div class="color-container">
+    <p class="text-left product-label">
+      {% if shop.locale == "es" %}
+       1. Seleccione el color: 
+      {% else %}
+        1. Select Color: 
+      {%endif %}
+      <span id="lbl-color"></span></p>
+    <div class="product-image">
+        <img id="product-img" src="default-image.jpg" alt="Product Image">
+    </div>
+    
+    <div class="swatches">
+      {% for swatch in product.metafields.custom.color_swatches.value %}
+        <div class="swatch tooltip" onclick="changeImage('{{ swatch.eye  }}', '{{ swatch.key }}', this)">
+          <span class="tooltiptext">{{swatch.key }}</span>
+            <img src="{{ swatch.lens }}" alt="{{ swatch.key }}">
+        </div>
+
+        {% comment %} <div class="swatch" onclick="changeImage('{{ swatch.eye }}', '{{ swatch.key }}', this)">
+          <div class="tooltip-wrapper">
+            <img src="{{ swatch.lens }}" alt="{{ swatch.key }}">
+            <span class="tooltiptext">{{ swatch.key }}</span>
+          </div>
+        </div> {% endcomment %}
+
+      {% endfor %}
+    </div>
+    <input  type="hidden" value="" id="product-color">
+  </div>
+  
+  
+  <div class="power-container">
+    <p class="text-left product-label label-prescription">
+      
+       {% if shop.locale == "es" %}
+        2. Introduzca su receta y cantidad:
+      {% else %}
+        2. Enter your Prescription & Quantity: 
+      {%endif %}
+    </p>
+   <div class="prescription-container">
+    <table class="custom-product-table-prescription thead">
+      <thead>
+        <tr>  
+          {%if shop.locale == 'es' %}
+              <th>Sph</th>
+              <th>Cantidad</th>
+            {% else %}
+              <th>Power</th>
+              <th>Quantity</th>
+            {% endif %}
+        </tr>
+      </thead>
+    </table>
+    <table class="custom-product-table-prescription mb-10">
+      <tbody>
+        <tr>
+          <td>
+           <div class="select">
+              <select class="product-selector select__select" id="product-selector" onchange="getVariantID();">
+                {% case checktag %}
+                  {% when "multi-colorlens" %}
+                    {% assign collection_size = collections['multilens-color-lens'].products.size %}
+                    {% paginate collections['multilens-color-lens'].products by 100 %}
+                      {% if collection_size > 0 %}
+                        {% for cproduct in collections['multilens-color-lens'].products %}
+                          {% assign product_power = cproduct.metafields.custom.power %}
+                          {% assign product_handle = cproduct.handle %}
+                          {% if product_power != '' and product_power != 'zzzzz' %}
+                            <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        <option disabled selected>No Power</option>
+                      {% endif %}
+                    {% endpaginate %} 
+                  {% when "multi-party" %}
+                    {% assign collection_size = collections['multilens-party'].products.size %}
+                    {% paginate collections['multilens-party'].products by 100 %}
+                      {% if collection_size > 0 %}
+                        {% for cproduct in collections['multilens-party'].products %}
+                          {% assign product_power = cproduct.metafields.custom.power %}
+                          {% assign product_handle = cproduct.handle %}
+                          {% if product_power != '' and product_power != 'zzzzz' %}
+                            <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        <option disabled selected>No Power</option>
+                      {% endif %}
+                    {% endpaginate %}
+                  {% when "ando-colorlens" %}
+                    {% assign collection_size = collections['white-light-colors'].products.size %}
+                    {% paginate collections['white-light-colors'].products by 100 %}
+                      {% if collection_size > 0 %}
+                        {% for cproduct in collections['white-light-colors'].products %}
+                          {% assign product_power = cproduct.metafields.custom.power %}
+                          {% assign product_handle = cproduct.handle %}
+                          {% if product_power != '' and product_power != 'zzzzz' %}
+                            <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        <option disabled selected>No Power</option>
+                      {% endif %}
+                    {% endpaginate %} 
+                  {% when "cc1d-phantom" %}
+                    {% assign collection_size = collections['clearcolor-1-day-phantom'].products.size %}
+                      {% if collection_size.size > 0 %}
+                        {% for cproduct in collections['clearcolor-1-day-phantom'].products %}
+                          {% assign product_power = cproduct.metafields.custom.power %}
+                          {% assign product_handle = cproduct.handle %}
+                          {% if product_power != '' and product_power != 'zzzzz' %}
+                              <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                          {% endif %}
+                        {% endfor %}                   
+                      {% else %}
+                          <option disabled selected>No Power</option>
+                      {% endif %} 
+                  {% when "clear-color-1day" %}
+                    {% assign collection_size = collections['clearcolor-1-day'].products.size %}
+                    {% if collection_size.size > 0 %}
+                      {% for cproduct in collections['clearcolor-1-day'].products %}
+                        {% assign product_power = cproduct.metafields.custom.power %}
+                        {% assign product_handle = cproduct.handle %}
+                        {% if product_power != '' and product_power != 'zzzzz' %}
+                            <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                        {% endif %}
+                      {% endfor %}                   
+                    {% else %}
+                        <option disabled selected>No Power</option>
+                    {% endif %}
+                  {% when "clear-color" %}
+                    {% assign collection_size = collections['clearcolor'].products.size %}
+                    {% if collection_size.size > 0 %}
+                      {% for cproduct in collections['clearcolor'].products %}
+                        {% assign product_power = cproduct.metafields.custom.power %}
+                        {% assign product_handle = cproduct.handle %}
+                        {% if product_power != '' and product_power != 'zzzzz' %}
+                            <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                        {% endif %}
+                      {% endfor %}                   
+                    {% else %}
+                        <option disabled selected>No Power</option>
+                    {% endif %} 
+                  {% when "clear-color-phantom" %}
+                    {% assign collection_size = collections['clearcolor-phantom'].products.size %}
+                    {% if collection_size.size > 0 %}
+                      {% for cproduct in collections['clearcolor-phantom'].products %}
+                        {% assign product_power = cproduct.metafields.custom.power %}
+                        {% assign product_handle = cproduct.handle %}
+                        {% if product_power != '' and product_power != 'zzzzz' %}
+                            <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                        {% endif %}
+                      {% endfor %}                   
+                    {% else %}
+                        <option disabled selected>No Power</option>
+                    {% endif %} 
+                  {% when "clear-color-14.2" %}
+                    {% assign collection_size = collections['clearcolor-14-2'].products.size %}
+                      {% if collection_size.size > 0 %}
+                        {% for cproduct in collections['clearcolor-14-2'].products %}
+                          {% assign product_power = cproduct.metafields.custom.power %}
+                          {% assign product_handle = cproduct.handle %}
+                          {% if product_power != '' and product_power != 'zzzzz' %}
+                              <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                          {% endif %}
+                        {% endfor %}                   
+                      {% else %}
+                          <option disabled selected>No Power</option>
+                      {% endif %}
+                  {% when "clear-color-55" %}
+                    {% assign collection_size = collections['clearcolor-55'].products.size %}
+                    {% paginate collections['clearcolor-55'].products by 100 %}
+                      {% if collection_size > 0 %}
+                        {% for cproduct in collections['clearcolor-55'].products %}
+                          {% assign product_power = cproduct.metafields.custom.power %}
+                          {% assign product_handle = cproduct.handle %}
+                          {% if product_power != '' and product_power != 'zzzzz' %}
+                            <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                          {% endif %}
+                        {% endfor %}
+                      {% else %}
+                        <option disabled selected>No Power</option>
+                      {% endif %}
+                    {% endpaginate %}
+                  {% when "test-color" %}
+                      {% assign collection_size = collections['test-color'].products.size %}
+                      {% if collection_size.size > 0 %}
+                        {% for cproduct in collections['test-color'].products %}
+                          {% assign product_power = cproduct.metafields.custom.power %}
+                          {% assign product_handle = cproduct.handle %}
+                          {% if product_power != '' and product_power != 'zzzzz' %}
+                              <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                          {% endif %}
+                        {% endfor %}                   
+                      {% else %}
+                          <option disabled selected>No Power</option>
+                      {% endif %}
+                    {% when "clear-color-eye-fit" %}
+                      {% assign collection_size = collections['clearcolor-eye-fit'].products.size %}
+                      {% paginate collections['clearcolor-eye-fit'].products by 100 %}
+                        {% if collection_size.size > 0 %}
+                          {% for cproduct in collections['clearcolor-eye-fit'].products %}
+                            {% assign product_power = cproduct.metafields.custom.power %}
+                            {% assign product_handle = cproduct.handle %}
+                            {% if product_power != '' and product_power != 'zzzzz' %}
+                                <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                            {% endif %}
+                          {% endfor %}                   
+                        {% else %}
+                            <option disabled selected>No Power</option>
+                        {% endif %}
+                      {% endpaginate %}
+                      
+                {% endcase %}
+              
+                </select>
+                <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+                  </path>
+                </svg>
+            </div>
+          </td>
+          <td>
+            <div class="product-form__input product-form__quantity">
+              <!-- <label class="quantity__label form__label" for="Quantity-template--15979220992083__main">Quantity<span class="quantity__rules-cart hidden">
+              <div class="loading__spinner hidden">
+                <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+                  <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+                </svg>
+              </div>
+              <span>(<span class="quantity-cart">0</span> in cart)</span>
+                    </span>
+              </label> -->
+                  <div class="price-per-item__container">
+                    <quantity-input class="quantity" data-url="/products/multilens-color-2s-power-1-00" data-section="template--15979220992083__main">
+                      <button class="quantity__button disabled" name="minus" type="button">
+                        <span class="visually-hidden">Decrease quantity for Multilens Color 2&amp;#39;s, Power +1.00</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="icon icon-minus" fill="none" viewBox="0 0 10 2">
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z" fill="currentColor">
+                          </path>
+                        </svg>
+
+                      </button>
+                      <input class="quantity__input" type="number" name="quantity" id="product-quantity" data-cart-quantity="0" data-min="1" min="1" step="1" value="1" form="product-form-template--15979220992083__main">
+                      <button class="quantity__button" name="plus" type="button">
+                        <span class="visually-hidden">Increase quantity for Multilens Color 2&amp;#39;s, Power +1.00</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="icon icon-plus" fill="none" viewBox="0 0 10 10">
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z" fill="currentColor">
+                        </path></svg>
+
+                      </button>
+                    </quantity-input>
+                  </div>
+                  <div class="quantity__rules caption" id="Quantity-Rules-template--15979220992083__main"></div></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>   
+   </div>
+  </div>
+  <div class="buy-button-container">
+    <button id="add-to-cart-button" name="add" class="product-form__submit button button--full-width collection-button2" style="cursor: pointer;">
+       <!-- {%- render 'icon-cart-new' -%} -->
+       
+      {% if shop.locale == "es" %}
+        <span>Añadir al carrito</span>
+        {% elsif shop.locale == "en" %}
+        <span>Add to cart</span>
+      {% endif %}
+        <div class="loading-overlay__spinner hidden">
+          <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+            <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+          </svg>
+        </div>
+      </button>
+  </div>
+  <input type="hidden" name="id" value="" id="input_variant">
+<!-- </form> -->
+</div>
+{% render 'custom-cart-modal' %}
+<script>
+     window.onload = function() {
+      var e = document.getElementById("product-selector");
+      var handlevalue = e.value;
+      console.log(handlevalue);
+      // getVariantID();
+      
+      document.getElementById('add-to-cart-button').addEventListener('click', function(e) {
+        e.preventDefault();
+        var productColor = document.getElementById('product-color').value;
+        if (productColor === '') {
+          alert('Please select a color');
+        } else {
+          
+          submitForm();
+        }
+      });
+
+    }
+
+    function changeImage(newSrc,newkey, thisElement) {
+        const productImg = document.getElementById('product-img');
+        productImg.src = newSrc;
+        productImg.style.display = 'block'; // Show the product image
+        productImg.parentNode.classList.add("selected");
+        // thisElement.classList.add("active");
+        toggleActive(thisElement);
+        const productColor = document.getElementById('product-color');
+        productColor.value = newkey;
+        var labelColor = document.getElementById('lbl-color');
+        labelColor.innerHTML = newkey;
+        getVariantID();
+    }
+
+    function toggleActive(thisElement){
+      for (const sw of document.querySelectorAll(".swatch.active")) {
+        sw.classList.remove("active");
+      }
+      thisElement.classList.add("active");
+    }
+
+    function getQuantity(id, selValue){
+      document.getElementById(id).value = selValue;
+    }
+    function submitForm(){     
+      // console.log("Inside Submit Form");
+      variant = document.getElementById('input_variant').value;
+      quantity = document.getElementById('product-quantity').value;
+      patient_reference = document.getElementById('patient_reference').value;
+      // alert("variant "+variant);
+      // alert("qtyLeft"+quantity);
+      let formData = {
+       'items': [{
+        'id': variant,
+        'quantity': quantity,
+         properties: {
+            'Patient Reference': patient_reference
+        }
+        }]
+      };
+      // console.log(formData);
+      
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        console.log(response.json())
+        if(response.ok){
+          // alert('Item(s) added to cart');
+          // window.location.href = "https://clearlab-spain.myshopify.com/cart";
+          afterSubmit();
+        }
+        // return response.json();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+    }
+  
+    function getVariantID(){
+      var variantId = '';
+      var countCombination = 0;
+      var productSelector = document.getElementById('product-selector').value;
+      var productColor = document.getElementById('product-color').value;
+      if(productColor == ''){
+        alert('Please select a color');
+      } else {
+        fetch(window.Shopify.routes.root + 'products/' + productSelector + '.js').then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(product => {
+            console.log(product);
+            pVariants = product.variants;
+            pVariants.forEach((variant) => {
+              // Cylinder = option1, Axis = option2
+              if (variant.option1 == productColor) {
+                variantId = variant.id;
+                countCombination++;
+              }
+            });
+        
+            if (countCombination > 0) {
+              document.getElementById('input_variant').value = variantId;
+            } else {
+              alert('That Product Combination is not available!');
+            }
+          })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+         
+      }
+      
+      
+    }
+</script>

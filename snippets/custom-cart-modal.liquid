@@ -1,0 +1,55 @@
+<div id="cartModal" class="modal">
+  <div class="modal-content">
+    <!-- Header Section -->
+    <div class="modal-header">
+      
+      {% if shop.locale == "es" %}
+        <h2>Carrito, <span id="cart-count">{{ cart.item_count }} </span><span id="cart-count-items"> artículos</span></h2>
+      {% elsif shop.locale == "en" %}
+        <h2>My Bag, <span id="cart-count">{{ cart.item_count }} </span><span id="cart-count-items"> Items</span></h2>
+      {% endif %}
+    </div>
+    
+    <!-- Added to Cart Message -->
+    <div class="modal-message">
+      <img src="{{ 'green-check.png' | asset_url }}" alt="Added to Cart">
+      {% if shop.locale == "es" %}
+        <span>Añadido al carrito</span>
+      {% elsif shop.locale == "en" %}
+        <span>Added to Cart!</span>
+      {% endif %}
+    </div>
+
+    <!-- Product Section -->
+    <div class="product-info">
+      <div class="product-image-container">
+        <img src="{{ product.featured_image | image_url }}" alt="Product Image">
+      </div>
+      <div class="product-details">
+        <h3>{{ product.metafields.custom.display_name | escape }}</h3>
+        <div id="product-details-specs">
+        </div>
+      </div>
+    </div>
+
+    <!-- Sub-total -->
+    <!-- <div class="subtotal">
+      <span>Sub-total</span>
+      <span id="product-total">€00.00</span>
+    </div>
+ -->
+    <!-- Buttons Section -->
+    <div class="buttons">
+      {% if shop.locale == "es" %}
+        <button onclick="gotoCheckout();" class="checkout-btn">Finalizar Pedido</button>
+        <a href="#" class="continue-shopping" onclick="closeModalCart();">Continuar el pedido</a>
+      {% elsif shop.locale == "en" %}
+        <button onclick="gotoCheckout();" class="checkout-btn">Checkout</button>
+        <a href="#" class="continue-shopping" onclick="closeModalCart();">Continue Shopping</a>
+      {% endif %}
+      
+    </div>
+  </div>
+</div>
+
+{{ 'custom-cart-modal.js' | asset_url | script_tag }}

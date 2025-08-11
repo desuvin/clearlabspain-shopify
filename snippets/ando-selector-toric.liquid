@@ -1,0 +1,389 @@
+{{ 'swatch.css' | asset_url | stylesheet_tag }}
+{{ 'custom-cart-modal.css' | asset_url | stylesheet_tag }}
+<div>
+              {% for tag in product.tags %}
+                    {% assign checktag = tag  %}
+              {% endfor %}       
+
+  <!-- {{ checktag }} -->
+  <!-- {{ product.metafields.product.color_swatches.value }} -->
+
+  <!-- {% for option in product.options %}
+    <small>{{ option }}</small>
+  {% endfor %} -->
+  <div class="format-container">
+    <p class="text-left product-label">
+       {% if shop.locale == "es" %}
+         1. Seleccione el formato:
+       {% else %}
+         1. Select Type of Box:
+       {%endif %}
+      <span id="lbl-color"></span></p>
+    <div class="product-form__input product-form__input--dropdown">
+      <div class="select">
+        <select id="product-format" class="select__select" onchange="getPowers();">
+          <option value="3Pk">3Pk</option>
+          <option value="blister">Blister</option>
+        </select>
+        <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+          </path>
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="cylinder-axis-container">
+    <p class="text-left product-label label-prescription">{% if shop.locale == "es" %}
+         2. Inique cilindro y eje
+       {% else %}
+         2. Enter your Cylinder & Axis:
+       {%endif %}</p>
+    <div class="prescription-container">
+      <table class="custom-product-table-prescription thead">
+        <thead>
+          <tr>  
+            {% if shop.locale == "es" %}
+            <th>Cil</th>
+            <th>Eje</th>
+            {%else%}
+            <th>Cylinder</th>
+            <th>Axis</th>
+            {%endif%}
+          </tr>
+        </thead>
+      </table>
+      <table class="custom-product-table-prescription mb-10">
+        <tbody>
+          <tr>
+            <td>
+              <div class="select">
+                <select id="product-cylinder" class="select__select" onchange="getVariantID();">
+                  {% for value in product.options_by_name['Cylinder'].values %}
+                    <option value="{{ value }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+                <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+                  </path>
+                </svg>
+              </div>
+            </td>
+            <td>
+              <div class="select">
+                <select id="product-axis" class="select__select" onchange="getVariantID();">
+                  {% for value in product.options_by_name['Axis'].values %}
+                    <option value="{{ value }}">{{ value }}</option>
+                  {% endfor %}
+                </select>
+                <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+                  </path>
+                </svg>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="power-container">
+    <p class="text-left product-label label-prescription">3. Enter your Power & Quantity: </p>
+    <div class="prescription-container">
+      <table class="custom-product-table-prescription thead">
+        <thead>
+          <tr>  
+            {%if shop.locale == 'es' %}
+              <th>Sph</th>
+              <th>Cantidad</th>
+            {% else %}
+              <th>Power</th>
+              <th>Quantity</th>
+            {% endif %}
+          </tr>
+        </thead>
+      </table>
+      <table class="custom-product-table-prescription mb-10">
+        <tbody>
+          <tr>
+            <td>
+              <div class="select">
+                {% assign sorted_products = '' %}
+        
+                {% case checktag %}
+                  {% when "ando-wlp-toric" %}
+                    {% for cproduct in collections['white-light-plus-toric'].products %}
+                      {% assign metafield_value = cproduct.metafields.custom.power | default: 'zzzzz' %}
+                      {% assign sorted_products = sorted_products | append: metafield_value | append: '|' | append: cproduct.handle | append: ',' %}
+                    {% endfor %}
+                {% endcase %}
+                
+                {% assign sorted_products = sorted_products | split: ',' %}
+                {% assign sorted_products = sorted_products | sort %}
+                
+                <select class="product-selector select__select" id="product-selector" onchange="getVariantID();">
+                    {% if sorted_products.size > 0 %}
+                      {% for sorted_product in sorted_products %}
+                        {% assign product_data = sorted_product | split: '|' %}
+                        {% assign product_power = product_data[0] %}
+                        {% assign product_handle = product_data[1] %}
+                        
+                        {% if product_handle != '' and product_power != 'zzzzz' %}
+                          {% assign cproduct = collections['white-light-plus-toric'].products | where: 'handle', product_handle | first %}
+                          <option value="{{ product_handle }}" {% if product_power == "00.00" %} selected {% endif %}>{{ product_power }}</option>
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      <option disabled selected>No Power</option>
+                    {% endif %}
+                </select>
+        
+                <svg aria-hidden="true" focusable="false" class="icon icon-caret" viewBox="0 0 10 6">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.354.646a.5.5 0 00-.708 0L5 4.293 1.354.646a.5.5 0 00-.708.708l4 4a.5.5 0 00.708 0l4-4a.5.5 0 000-.708z" fill="currentColor">
+                  </path>
+                </svg>
+              </div>
+            </td>
+            <td>
+              <div class="product-form__input product-form__quantity">
+                  <div class="price-per-item__container">
+                    <quantity-input class="quantity" data-url="/products/multilens-color-2s-power-1-00" data-section="template--15979220992083__main">
+                      <button class="quantity__button disabled" name="minus" type="button">
+                        <span class="visually-hidden">Decrease quantity for Multilens Color 2&amp;#39;s, Power +1.00</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="icon icon-minus" fill="none" viewBox="0 0 10 2">
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M.5 1C.5.7.7.5 1 .5h8a.5.5 0 110 1H1A.5.5 0 01.5 1z" fill="currentColor">
+                          </path>
+                        </svg>
+
+                      </button>
+                      <input class="quantity__input" type="number" name="quantity" id="product-quantity" data-cart-quantity="0" data-min="1" min="1" step="1" value="1" form="product-form-template--15979220992083__main">
+                      <button class="quantity__button" name="plus" type="button">
+                        <span class="visually-hidden">Increase quantity for Multilens Color 2&amp;#39;s, Power +1.00</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" class="icon icon-plus" fill="none" viewBox="0 0 10 10">
+                          <path fill-rule="evenodd" clip-rule="evenodd" d="M1 4.51a.5.5 0 000 1h3.5l.01 3.5a.5.5 0 001-.01V5.5l3.5-.01a.5.5 0 00-.01-1H5.5L5.49.99a.5.5 0 00-1 .01v3.5l-3.5.01H1z" fill="currentColor">
+                        </path></svg>
+
+                      </button>
+                    </quantity-input>
+                  </div>
+                  <div class="quantity__rules caption" id="Quantity-Rules-template--15979220992083__main"></div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="buy-button-container">
+    <button id="add-to-cart-button" name="add" class="product-form__submit button button--full-width collection-button2" style="cursor: pointer;">
+       <!-- {%- render 'icon-cart-new' -%} -->
+       <span>Add to cart</span>
+        <div class="loading-overlay__spinner hidden">
+          <svg aria-hidden="true" focusable="false" class="spinner" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+            <circle class="path" fill="none" stroke-width="6" cx="33" cy="33" r="30"></circle>
+          </svg>
+        </div>
+      </button>
+  </div>
+   
+    
+    
+  <!-- <form id="add-to-cart-form" action="/cart/add" method="post"> -->
+  <!-- Item -->
+  <input type="hidden" name="id" value="" id="input_variant">
+  <input type="hidden"  name="quantity" value="0" id="input_qty_left">
+
+<!-- </form> -->
+</div>
+{% render 'custom-cart-modal' %}
+<script>
+     window.onload = function() {
+      var e = document.getElementById("product-selector");
+      var handlevalue = e.value;
+      // console.log(handlevalue);
+      getVariantID();
+      
+      document.getElementById('add-to-cart-button').addEventListener('click', function(e) {
+        e.preventDefault();
+        var productPower = document.getElementById('product-selector').value;
+        if (productPower === '') {
+          alert('Please select a power');
+        } else {
+          
+          submitForm();
+        }
+      });
+
+    }
+
+    function getPowers(){
+      var productPower = document.getElementById('product-selector');
+      // console.log(productPower.options[productPower.selectedIndex].text);
+      var productFormat = document.getElementById('product-format');
+      // var selPower = productPower.value;
+      var selPower = productPower.options[productPower.selectedIndex].text;
+      var selFormat = productFormat.value;
+      
+      // console.log(selPower);
+      // console.log(selFormat);
+      if(selFormat == 'blister'){
+        var collectionHandle = "white-light-plus-toric-sample";
+        var collectionID = "{{ collections['white-light-plus-toric-sample'].id }}";
+        updateOption('product-selector', collectionHandle, selPower, collectionID);
+      }
+
+      if(selFormat == '3Pk'){
+        var collectionHandle = "white-light-plus-toric";
+        var collectionID = "{{ collections['white-light-plus-toric'].id }}";
+        updateOption('product-selector', collectionHandle, selPower, collectionID);
+      }
+      
+    }
+
+    function updateOption(selId, colHandle, curSelection, colID){
+      console.log(curSelection);
+      var selSelect = document.getElementById(selId);
+      selSelect.options.length = 0;
+      // var url = '/collections/'+colHandle+'/products.json';
+      
+      const shopifyDomain = 'clearlab-spain.myshopify.com';
+      const accessToken = 'eb4895d8923383de59501acd82315402';
+      const collectionHandle = colHandle; // replace with your collection handle
+
+      
+      const collectionNumericID = `gid://shopify/Collection/${colID}`;
+
+      const variables = {
+        id: collectionNumericID,
+      };
+        const query2 = `query getCollectionById($id: ID!) {
+          collection(id: $id) {
+            title
+            products(first: 100) {
+              edges{
+                node {
+                  handle
+                  metafield(namespace: "custom", key: "power") {
+                    value
+                    type
+                  }
+                }
+              }
+            }
+          }
+        }`;
+
+        fetch(`https://`+shopifyDomain+`/api/2024-04/graphql.json`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Storefront-Access-Token': accessToken
+          },
+          body: JSON.stringify({
+            query: query2, // Pass the query string
+            variables: variables, // Pass the variables object
+          }),
+        })
+        .then(response => response.json())
+        .then(data => {
+          // console.log(data);
+          const products = data.data.collection.products.edges;
+          // console.log("products", products);
+          // create option
+          products.forEach(product => {
+            // console.log(product.node.handle, product.node.metafield.value);
+            const powerOption = document.createElement('option');
+            powerOption.textContent = product.node.metafield.value;
+            powerOption.value = product.node.handle;
+            if(curSelection == product.node.metafield.value){
+              powerOption.selected = true;
+            }
+            selSelect.appendChild(powerOption);
+          });
+          // products.forEach(product => {
+          //   console.log(product.node.handle, product.node.metafield.value);
+          // });
+          getVariantID();
+        })
+        
+        .catch(error => console.error('Error:', error));
+    }
+   
+  
+    function submitForm(){     
+      console.log("Inside Submit Form");
+      variant = document.getElementById('input_variant').value;
+      quantity = document.getElementById('product-quantity').value;
+      // alert("variant "+variant);
+      // alert("qtyLeft"+quantity);
+      let formData = {
+       'items': [{
+        'id': variant,
+        'quantity': quantity
+        }]
+      };
+      // console.log(formData);
+      
+      fetch(window.Shopify.routes.root + 'cart/add.js', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => {
+        console.log(response.json())
+        if(response.ok){
+          // alert('Item(s) added to cart');
+          // window.location.href = "https://clearlab-spain.myshopify.com/cart";
+          afterSubmit();
+        }
+        // return response.json();
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+
+    }
+  
+    function getVariantID(){
+      var variantId = '';
+      var countCombination = 0;
+      var productSelector = document.getElementById('product-selector').value;
+      var productCylinder = document.getElementById('product-cylinder').value;
+      var productAxis = document.getElementById('product-axis').value;
+      if(productSelector == ''){
+        alert('Please select a power');
+      } else {
+        fetch(window.Shopify.routes.root + 'products/' + productSelector + '.js').then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then(product => {
+            // console.log(product);
+            pVariants = product.variants;
+            pVariants.forEach((variant) => {
+              // Cylinder = option1, Axis = option2
+              if (variant.option1 == productCylinder && variant.option2 == productAxis) {
+                variantId = variant.id;
+                countCombination++;
+              }
+            });
+        
+            if (countCombination > 0) {
+              document.getElementById('input_variant').value = variantId;
+            } else {
+              alert('That Product Combination is not available!');
+            }
+          })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+         
+      }
+      
+      
+    }
+</script>

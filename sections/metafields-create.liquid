@@ -1,0 +1,93 @@
+<form id="metafield-form">
+  <input type="text" data-metafield-key="company" id="custom_field_company" placeholder="Enter Company" required />
+  <input type="text" data-metafield-key="navision_account" id="custom_field_client_number" placeholder="Enter Navision Account" required />
+  <button type="submit">Send</button>
+</form>
+
+<script>
+    document.getElementById('metafield-form').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const companyName = document.getElementById('custom_field_company');
+        const clientNumber = document.getElementById('custom_field_client_number');
+        const customerId = {{ customer.id | json }}; //8424905932883
+        if(companyName) {
+            let metafieldKey = companyName.dataset.metafieldKey || '';
+            sendMetafield(metafieldKey, companyName.value, customerId);
+        }
+
+        if(clientNumber) {
+            let metafieldKey = clientNumber.dataset.metafieldKey || '';
+            sendMetafield(metafieldKey, clientNumber.value, customerId);
+        }
+        
+    });
+
+    function sendMetafield(metafieldKey, metafieldValue, customerId) {
+        const namespace = 'custom';
+        
+        if(metafieldKey && metafieldValue) {
+            const formData = new FormData();
+            formData.append('action', 'save_metafield');
+            formData.append('customer_id', customerId);
+            formData.append('metafield_key', metafieldKey);
+            formData.append('metafield_value', metafieldValue);
+            formData.append('namespace', namespace);
+
+            fetch('https://shopify.clearlablens.com/clearlabes/metafields/', {
+                method: 'POST',
+                body: formData
+                {% comment %} headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    metafield_key: metafieldKey,
+                    metafield_value: metafieldValue,
+                    namespace: namespace,
+                    customer_id: customerId,
+                    action: 'save_metafield'
+                }) {% endcomment %}
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+    }
+  {% comment %} document.addEventListener("DOMContentLoaded", async () => {
+    const companyName = localStorage.getItem('custom_field_company');
+    
+    if (companyName) {
+      const res = await fetch('https://shopify.clearlablens.com/save-metafield.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          company_name: companyName,
+          action: 'save_company_name'
+        })
+      });
+      const result = await res.json();
+      console.log(result);
+      localStorage.removeItem('custom_field_company');
+    }
+
+    const clientNumber = localStorage.getItem('custom_field_client_number');
+    if (clientNumber) {
+      const res = await fetch('https://shopify.clearlablens.com/save-metafield.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          client_number: clientNumber,
+          metafield_namespace: 'custom_fields',
+          action: 'save_client_number'
+        })
+      });
+      const result = await res.json();
+      console.log(result);
+      localStorage.removeItem('custom_field_client_number');
+      }
+  }); {% endcomment %}
+
+    
+</script>

@@ -1,0 +1,43 @@
+
+<div class="page-activation-sections page-width">
+  <h3>Activation Link</h3>
+  {% if shop.locale == "es" %}
+    {% assign activation_text = 'Introduce tu email para obtener el enlace de activación.' %}
+  {% elsif shop.locale == "en" %}
+    {% assign activation_text = 'Enter your email to get the account activation link!' %}
+  {% endif %}
+  
+<p>{{ activation_text }}</p>
+
+<form id="activation-form">
+  <input type="email" id="email" placeholder="Enter customer email" required />
+  <button type="submit">Get Activation Link</button>
+  
+</form>
+
+<p id="result"></p>
+</div>
+
+
+<script>
+  document.getElementById('activation-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    document.getElementById('result').innerHTML = ''; // Clear previous results
+    const email = document.getElementById('email').value;
+
+    const formData = new FormData();
+    formData.append('action', 'activation_link');
+    formData.append('email', email);
+
+    const response = await fetch('https://shopify.clearlablens.com/clearlabes/', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await response.json();
+    const alink = document.createElement('a');
+    alink.href = data.link || '#';
+    alink.innerText = data.link || 'Error retrieving link';
+    document.getElementById('result').append(alink || data.error);
+  });
+</script>

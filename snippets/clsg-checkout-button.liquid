@@ -1,0 +1,10 @@
+
+
+{% assign checkout_button_text = '' %}
+  {% if shop.locale == "es" %}
+    {% assign checkout_button_text = 'Realizar Pedido' %}
+  {% else if shop.locale == "en" %}
+    {% assign checkout_button_text = 'Place Order' %}
+  {% endif %}
+    <button id="btnCheckoutClsg" class="cart__checkout-button button trigger" name="checkout">{{ checkout_button_text }}</button>
+

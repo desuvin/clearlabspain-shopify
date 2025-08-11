@@ -1,0 +1,16 @@
+{{ 'section-collection-list.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-slider.css' | asset_url | stylesheet_tag }}
+
+<div class="page-width section-{{ section.id }}-padding prescription">
+  <h2>
+
+    This is a test page
+  
+    {{ page.content }}
+
+    
+  </h2>
+</div>
+{% section 'custom-product-lines' %}
+{% section 'collection-list' %}

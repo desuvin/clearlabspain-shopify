@@ -1,0 +1,26 @@
+.grid-container {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  gap: 20px; /* Adjust gap size as needed */
+  align-items: center;
+}
+
+.grid-item {
+  padding: 5px; /* Adjust padding as needed */
+  max-height: 660px;
+}
+
+.grid-item-60 img {
+  width: 100%;
+  /* height: auto; */
+}
+
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+  }
+
+  .grid-item {
+    padding: 10px;
+  }
+}

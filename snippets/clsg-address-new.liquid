@@ -1,0 +1,231 @@
+{% comment %} new-address {% endcomment %}
+{{ 'clsg-modal.css' | asset_url | stylesheet_tag }}
+{{ 'tailwind-clsg.css' | asset_url | stylesheet_tag }}
+{{ 'clsg-address-new.css' | asset_url | stylesheet_tag }}
+
+<div class="flex items-center justify-center min-h-screen bg-gray-100 clsg-address-new">
+  <div class="clsg-modal-container justify-self-center">
+    <div class="clsg-modal-header">
+      <span class="clsg-close-address-new-button">
+        {{- 'close-button.svg' | inline_asset_content -}}
+      </span>
+      <div class="div-text">
+        <h1>New Address</h1>
+      </div>
+    </div>
+    <div class="clsg-modal-content customer addresses">
+      <div id="container-new-address">
+        {% form 'customer_address', customer.new_address %}
+        <!-- form content -->
+          <div class="field">
+            <input
+              type="text"
+              id="AddressFirstNameNew"
+              name="address[first_name]"
+              value="{{ form.first_name }}"
+              autocomplete="given-name"
+              placeholder="{{ 'customer.addresses.first_name' | t }}"
+            >
+            <label for="AddressFirstNameNew">{{ 'customer.addresses.first_name' | t }}</label>
+          </div>
+          <div class="field">
+            <input
+              type="text"
+              id="AddressLastNameNew"
+              name="address[last_name]"
+              value="{{ form.last_name }}"
+              autocomplete="family-name"
+              placeholder="{{ 'customer.addresses.last_name' | t }}"
+            >
+            <label for="AddressLastNameNew">{{ 'customer.addresses.last_name' | t }}</label>
+          </div>
+          <div class="field">
+            <input
+                type="text"
+                id="AddressCompanyNew"
+                name="address[company]"
+                value="{{ form.company }}"
+                autocomplete="organization"
+                placeholder="{{ 'customer.addresses.company' | t }}"
+              >
+              <label for="AddressCompanyNew">{{ 'customer.addresses.company' | t }}</label>
+            </div>
+            <div class="field">
+              <input
+                type="text"
+                id="AddressAddress1New"
+                name="address[address1]"
+                value="{{ form.address1 }}"
+                autocomplete="address-line1"
+                placeholder="{{ 'customer.addresses.address1' | t }}"
+              >
+              <label for="AddressAddress1New">{{ 'customer.addresses.address1' | t }}</label>
+            </div>
+            <div class="field hidden">
+              <input
+                type="text"
+                id="AddressAddress2New"
+                name="address[address2]"
+                value="{{ form.address2 }}"
+                autocomplete="address-line2"
+                placeholder="{{ 'customer.addresses.address2' | t }}"
+              >
+              <label for="AddressAddress2New">{{ 'customer.addresses.address2' | t }}</label>
+            </div>
+            <div class="field">
+              <input
+                type="text"
+                id="AddressCityNew"
+                name="address[city]"
+                value="{{ form.city }}"
+                autocomplete="address-level2"
+                placeholder="{{ 'customer.addresses.city' | t }}"
+              >
+              <label for="AddressCityNew">{{ 'customer.addresses.city' | t }}</label>
+            </div>
+            <div>
+              <label for="AddressCountryNew">{{ 'customer.addresses.country' | t }}</label>
+              <div class="select">
+                <select
+                  id="AddressCountryNew"
+                  name="address[country]"
+                  data-default="{{ form.country }}"
+                  autocomplete="country"
+                >
+                  {{ country_option_tags }}
+                </select>
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+                  <use href="#icon-caret" />
+                </svg>
+              </div>
+            </div>
+            <div id="AddressProvinceContainerNew" style="display: none">
+              <label for="AddressProvinceNew">{{ 'customer.addresses.province' | t }}</label>
+              <div class="select">
+                <select
+                  id="AddressProvinceNew"
+                  name="address[province]"
+                  data-default="{{ form.province }}"
+                  autocomplete="address-level1"
+                ></select>
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+                  <use href="#icon-caret" />
+                </svg>
+              </div>
+            </div>
+            <div class="field">
+              <input
+                type="text"
+                id="AddressZipNew"
+                name="address[zip]"
+                value="{{ form.zip }}"
+                autocapitalize="characters"
+                autocomplete="postal-code"
+                placeholder="{{ 'customer.addresses.zip' | t }}"
+              >
+              <label for="AddressZipNew">{{ 'customer.addresses.zip' | t }}</label>
+            </div>
+            <div class="field">
+              <input
+                type="tel"
+                id="AddressPhoneNew"
+                name="address[phone]"
+                value="{{ form.phone }}"
+                autocomplete="tel"
+                placeholder="{{ 'customer.addresses.phone' | t }}"
+              >
+              <label for="AddressPhoneNew">{{ 'customer.addresses.phone' | t }}</label>
+            </div>
+            <div style="display:none;">
+              {{ form.set_as_default_checkbox }}
+              <label for="address_default_address_new">{{ 'customer.addresses.set_default' | t }}</label>
+            </div>
+            <div class="mt-10">
+              <button>{{ 'customer.addresses.add' | t }}</button>
+              <button type="reset" class="display-hide-trigger" data-container-target="container-new-address">{{ 'customer.addresses.cancel' | t }}</button>
+            </div>
+          {% endform %}
+        </div>
+    </div>
+  </div>
+</div>
+
+<script>                      
+ // modal
+  var modalAddressNew = document.querySelector(".clsg-address-new");
+  var triggerAddressNew = document.querySelector(".new-address");
+  var closeButtonAddressNew = document.querySelector(".clsg-close-address-new-button");
+  // var cancelButton = document.querySelector(".clsg-cancel-button");
+    
+  function toggleModalAddressNew() {
+    modalAddressNew.classList.toggle("show-modal");
+  }
+    
+
+    
+  function hideModalAddressNew(){
+    modalAddressNew.classList.remove("show-modal");
+  }
+    
+  triggerAddressNew.addEventListener("click", toggleModalAddressNew);
+  closeButtonAddressNew.addEventListener("click", toggleModalAddressNew);  
+  // cancelButton.addEventListener("click", toggleModal);
+  // modal.addEventListener("click", windowOnClick);
+  // end modal
+
+  document.addEventListener("DOMContentLoaded", function () {
+      var addressForm = document.querySelector("#address_form_new");
+  
+      if (addressForm) {
+          addressForm.addEventListener("submit", function (event) {
+              event.preventDefault();
+              var formData = new FormData(addressForm);
+              fetch(addressForm.action, {
+                  method: "POST",
+                  body: formData,
+                  headers: { "X-Requested-With": "XMLHttpRequest" }
+              })
+              .then(response => response.text()) // Shopify might return HTML, so parse as text
+              .then(responseText => {
+                  console.log(responseText);
+                  if (responseText.includes("success")) { // Adjust success detection
+                    // addAddressSelection();
+                    retrieveAddress();
+                    
+                    // alert("Address updated successfully!");
+                  } else {
+                      alert("Something went wrong. Please try again.");
+                  }
+              })
+              .catch(error => console.error("Error:", error));
+          });
+      }
+
+    // retrieveAddress();
+  });
+
+  function addAddressSelection(){
+    selName.innerHTML = shippingName;
+    selAddress1.innerHTML = document.getElementById('AddressAddress1New');
+    selStreet.innerHTML = document.getElementById('AddressCityNew');
+    selCity.innerHTML = shippingCity;
+    selProvince.innerHTML = shippingProvince;
+    selZip.innerHTML = shippingZip;
+    selCountry.innerHTML = shippingCountry;
+    selFirstName.innerHTML = document.getElementById('AddressFirstNameNew').value;
+    selLastName.innerHTML = document.getElementById('AddressLastNameNew').value;
+  }
+
+  function reloadSelection(){
+    
+  }
+
+  function clearFormAddressNew(){
+    document.getElementById('address_form_new').reset();
+  }
+  
+</script>
+
+                    
+<script src="{{ 'province.js' | asset_url }}" defer></script>
+<script src="{{ 'clsg-address.js' | asset_url }}" defer></script>

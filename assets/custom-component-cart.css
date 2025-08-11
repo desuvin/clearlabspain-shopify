@@ -1,0 +1,7 @@
+.cart-item__quantity-wrapper {
+  justify-content: flex-end;
+}
+
+th.text-align-right{
+  text-align: right;
+}

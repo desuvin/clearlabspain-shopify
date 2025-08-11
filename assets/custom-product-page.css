@@ -1,0 +1,232 @@
+.select{
+  border: none;
+}
+.select select{
+  text-align-last: center;
+}
+#product-selector{
+  font-size: 1.6rem;
+}
+#product-cylinder{
+  font-size: 1.6rem;
+}
+#product-axis{
+  font-size: 1.6rem;
+}
+#product-format{
+  font-size: 1.6rem;
+}
+#product-power{
+  font-size: 1.6rem;
+}
+.name-container{
+  background-color: white;
+  padding-left: 15px;
+  border-radius: 1em;
+  border: 1px solid #007bff;
+  margin-bottom: 5px;
+  padding-right: 15px;
+}
+.custom-price{
+  color: #0060A8;
+  text-align: center;
+  font-family: Inter;
+  font-size: 3rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -1.907px;
+}
+
+.lens-per-piece{
+  display: inline-block;
+  border-radius: 12px;
+  background: #EFF5F8;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-left: 1px;
+  padding-right: 1px;
+  margin-left: 10px;
+  min-width:75px;
+}
+
+.lens-per-piece small{
+  color: #4E4E4E;
+  text-align: center;
+  font-family: Inter;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  margin-left: 3px;
+  vertical-align: middle;
+  /* letter-spacing: -0.976px; */
+}
+.mb-10{
+  margin-bottom: 10px;
+}
+.visibility-off{
+  visibility: hidden;
+}
+
+.prescription-container{
+  border-radius: 1em;
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.28);
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.28);
+  width: 97%;
+}
+
+.prescription-container-novariant{
+  border-radius: 1em;
+  box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.28);
+  -webkit-box-shadow: 0 1px 3px 1px rgba(0, 0, 0, 0.28);
+  width: 100%;
+}
+/* No Variant  */
+.prescription-container-novariant table.custom-product-table-prescription{
+  color: #0060A8;
+  font-family: Inter;
+  font-size: 1.52594rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: -0.07631rem;
+}
+table.novariant-product-table-prescription {
+  table-layout: fixed;
+  border-collapse: collapse;
+  /* border-radius: 1em; */
+  overflow: hidden;
+  text-align: left;
+  min-width: 200px;
+}
+table.novariant-product-table-prescription.thead {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+}
+
+.novariant-product-table-prescription th {
+  /* border-top: 0.5px solid #000;
+  border-bottom: 0.5px solid #000; */
+  background: #C9EAF9;
+  /* border: 0.5px solid #4E4E4E; */
+  height: 40px;
+}
+.novariant-product-table-prescription th{
+  padding: 1rem;
+}
+.novariant-product-table-prescription td{
+  padding: 1rem;
+  height:40px;
+  border-right: 0.5px solid rgba(0, 0, 0, 0.28);
+}
+.novariant-product-table-prescription td:last-child{
+  padding: 1rem;
+  border-right: 0;
+}
+.novariant-product-table-prescription tr:first-child td {
+  
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.28);
+}
+
+.prescription-container-novariant select{
+  /* border-radius: 7.5px; */
+  /* border: 0.5px solid #4E4E4E; */
+  background: #FFF;
+  width: 100%;
+  height:100%;
+  padding: 4px 6px 4px 6px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+/*End No Variant  */
+table.custom-product-table-prescription {
+  table-layout: fixed;
+  border-collapse: collapse;
+  /* border-radius: 1em; */
+  overflow: hidden;
+  width: 100%;
+  text-align: left;
+}
+table.custom-product-table-prescription.thead {
+  border-top-left-radius: 1em;
+  border-top-right-radius: 1em;
+}
+
+.custom-product-table-prescription th {
+  /* border-top: 0.5px solid #000;
+  border-bottom: 0.5px solid #000; */
+  background: #C9EAF9;
+  /* border: 0.5px solid #4E4E4E; */
+  height: 40px;
+}
+.custom-product-table-prescription th{
+  padding: 1rem;
+}
+.custom-product-table-prescription td{
+  padding: 1rem;
+  height:40px;
+  border-right: 0.5px solid rgba(0, 0, 0, 0.28);
+}
+.custom-product-table-prescription td:last-child{
+  padding: 1rem;
+  border-right: 0;
+}
+.custom-product-table-prescription tr:first-child td {
+  
+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.28);
+}
+
+.prescription-container select{
+  /* border-radius: 7.5px;
+  border: 0.5px solid #4E4E4E; */
+  background: #FFF;
+  width: 100%;
+  /* height:100%; */
+  padding: 4px 6px 4px 6px;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.product-buttons{
+  margin-top: 30px;
+}
+
+.promobox-container table.custom-product-table-prescription td{
+  background: #E9F8FF;
+}
+
+.product__title h1{
+  color : #4e4e4e;
+}
+
+.price-item.price-item--regular{
+  font-weight: bold;
+  
+}
+
+.product-form__input.product-form__quantity{
+  margin-bottom: unset;
+}
+.product-form__input.product-form__quantity .quantity{
+  width: 100%;
+}
+/* .spr-summary-actions-togglereviews{
+  color: #454545;;
+  font-family: Inter;
+  font-size: 1.22063rem;
+  font-style: normal;
+  font-weight: 600;
+}
+.spr-summary-actions-newreview{
+  color: #0060A8;
+  text-align: right;
+  font-family: Inter;
+  font-size: 1.22063rem;
+  font-style: normal;
+  font-weight: 600;
+  text-decoration-line: underline;
+} */
