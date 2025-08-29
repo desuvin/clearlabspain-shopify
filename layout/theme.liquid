@@ -305,6 +305,9 @@
             currentPath != '/account' &&
             currentPath != '/account/login' &&
             currentPath != '/account/addresses' &&
+            currentPath != '/en/account/login' &&
+            currentPath != '/en/account/addresses' &&
+            currentPath != '/en/account/' &&
             currentPath != '')
              {
               window.location.href = "/pages/account-not-activated";
@@ -325,7 +328,16 @@
           currentPath != '/pages/account-not-activated' &&
           !currentPath.includes('/account/activate') && // Check if the path includes 'activate'
           !currentPath.includes('/account/reset') &&
-          !currentPath.includes('/pages/activation') // Check if the path includes 'activation'
+          !currentPath.includes('/pages/activation') && // Check if the path includes 'activation'
+          currentPath != '/en/account' &&
+          currentPath != '/en/account/login' &&
+          currentPath != '/en/account/register' &&
+          currentPath != '/en/account/recover' &&
+          currentPath != '/en/checkout' &&
+          currentPath != '/en/pages/account-not-activated' &&
+          !currentPath.includes('/en/account/activate') && // Check if the path includes 'activate'
+          !currentPath.includes('/en/account/reset') &&
+          !currentPath.includes('/en/pages/activation') // Check if the path includes 'activation
         ) {
           window.location.href = "/account/login";
         }
