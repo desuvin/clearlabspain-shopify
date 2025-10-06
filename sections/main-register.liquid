@@ -54,9 +54,6 @@
         type="text"
         name="customer[first_name]"
         id="RegisterForm-FirstName"
-        {% if form.first_name %}
-          value="{{ form.first_name }}"
-        {% endif %}
         autocomplete="given-name"
         placeholder="{{ 'customer.register.first_name' | t }}"
       >
@@ -69,9 +66,6 @@
         type="text"
         name="customer[last_name]"
         id="RegisterForm-LastName"
-        {% if form.last_name %}
-          value="{{ form.last_name }}"
-        {% endif %}
         autocomplete="family-name"
         placeholder="{{ 'customer.register.last_name' | t }}"
       >
@@ -84,9 +78,6 @@
         type="email"
         name="customer[email]"
         id="RegisterForm-email"
-        {% if form.email %}
-          value="{{ form.email }}"
-        {% endif %}
         spellcheck="false"
         autocapitalize="off"
         autocomplete="email"
@@ -134,6 +125,85 @@
         {{ form.errors.messages.email }}.
       </span>
     {%- endif -%}
+
+    {% comment %} For Address {% endcomment %}
+    <div class="field">
+      <input
+        type="text"
+        id="AddressAddress1New"
+        name="address[address1]"
+        value=""
+        autocomplete="address-line1"
+        placeholder="{{ 'customer.addresses.address1' | t }}"
+      >
+      <label for="AddressAddress1New">{{ 'customer.addresses.address1' | t }}</label>
+    </div>
+    <div class="field">
+              <input
+                type="text"
+                id="AddressCityNew"
+                name="address[city]"
+                value=""
+                autocomplete="address-city"
+                placeholder="{{ 'customer.addresses.city' | t }}"
+              >
+              <label for="AddressCityNew">{{ 'customer.addresses.city' | t }}</label>
+            </div>
+    <div class="">
+              <label for="AddressCountryNew">{{ 'customer.addresses.country' | t }}</label>
+              <div class="select">
+                <select
+                  id="AddressCountryNew"
+                  name="address[country]"
+                  data-default=""
+                  autocomplete="country"
+                >
+                  {{ country_option_tags }}
+                </select>
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+                  <use href="#icon-caret" />
+                </svg>
+              </div>
+            </div>
+            {% comment %} <div id="AddressProvinceContainerNew" style="display: none">
+              <label for="AddressProvinceNew">{{ 'customer.addresses.province' | t }}</label>
+              <div class="select">
+                <select
+                  id="AddressProvinceNew"
+                  name="address[province]"
+                  data-default=""
+                  autocomplete="address-level1"
+                ></select>
+                <svg aria-hidden="true" focusable="false" viewBox="0 0 10 6">
+                  <use href="#icon-caret" />
+                </svg>
+              </div>
+            </div> {% endcomment %}
+            <div class="field">
+              <input
+                type="text"
+                id="AddressZipNew"
+                name="address[zip]"
+                value=""
+                autocapitalize="characters"
+                autocomplete="postal-code"
+                placeholder="{{ 'customer.addresses.zip' | t }}"
+              >
+              <label for="AddressZipNew">{{ 'customer.addresses.zip' | t }}</label>
+            </div>
+            <div class="field">
+              <input
+                type="tel"
+                id="AddressPhoneNew"
+                name="address[phone]"
+                value=""
+                autocomplete="tel"
+                placeholder="{{ 'customer.addresses.phone' | t }}"
+              >
+              <label for="AddressPhoneNew">{{ 'customer.addresses.phone' | t }}</label>
+            </div>
+
+
     <div class="field">
       <input
         type="password"
@@ -159,29 +229,94 @@
         {{ form.errors.messages.password }}.
       </span>
     {%- endif -%}
-    <button id="register-submit">
+    {% comment %} <button id="register-submit">
       {{ 'customer.register.submit' | t }}
-    </button>
+    </button> {% endcomment %}
+    
   {%- endform -%}
+  <button class="register-account">
+       {{ 'customer.register.submit' | t }}
+  </button>
 </div>
 
-<script>
+ <script>
   document.addEventListener("DOMContentLoaded", function () {
-    const registerSubmitButton = document.getElementById('register-submit');
-    registerSubmitButton.addEventListener('click', function (e) {
-      console.log('Form submitted');
-      const companyName = document.querySelector('#custom_field_company');
-      const clientNumber = document.querySelector('#custom_field_client_number');
+    const customerForm = document.querySelector("#create_customer");
+    const registerButton = document.querySelector('.register-account');
 
-      localStorage.setItem('custom_field_company', companyName.value);
-      localStorage.setItem('custom_field_company_number_metafield_key', companyName.dataset.metafieldKey);
-      
-      localStorage.setItem('custom_field_client_number', clientNumber.value);
-      localStorage.setItem('custom_field_client_number_metafield_key', clientNumber.dataset.metafieldKey);
-    });
+    if (customerForm) {
+      registerButton.addEventListener("click", function (e){
+        const companyNameEl = document.querySelector('#custom_field_company');
+        const clientNumberEl = document.querySelector('#custom_field_client_number');
+        const emailEl = document.querySelector('#RegisterForm-email');
+        const firstNameEl = document.querySelector('#RegisterForm-FirstName');
+        const lastNameEl = document.querySelector('#RegisterForm-LastName');
+        
+        // Address fields
+        const address1El = document.querySelector('#AddressAddress1New');
+        const cityEl = document.querySelector('#AddressCityNew');
+        const zipEl = document.querySelector('#AddressZipNew');
+        const phoneEl = document.querySelector('#AddressPhoneNew');
+        const countryEl = document.querySelector('#AddressCountryNew');
+
+        const requiredFields = [
+          companyNameEl,
+          clientNumberEl,
+          emailEl,
+          firstNameEl,
+          lastNameEl,
+          address1El,
+          cityEl,
+          zipEl,
+          phoneEl,
+          countryEl
+        ];
+
+        const emptyFields = requiredFields.filter(el => !el || el.value.trim() === "");
+
+        if (emptyFields.length > 0) {
+          alert("Please fill in all required fields before submitting.");
+          console.warn("Form not submitted — missing fields:", emptyFields.map(el => el.id));
+          return; // stop execution
+        }
+
+        console.log('All fields valid — saving to localStorage...');
+
+        // Save company + client number
+        if (companyNameEl) {
+          localStorage.setItem('custom_field_company', companyNameEl.value);
+          localStorage.setItem('custom_field_company_number_metafield_key', companyNameEl.dataset.metafieldKey || "");
+        }
+
+        if (clientNumberEl) {
+          localStorage.setItem('custom_field_client_number', clientNumberEl.value);
+          localStorage.setItem('custom_field_client_number_metafield_key', clientNumberEl.dataset.metafieldKey || "");
+        }
+
+        // Special case: shopify@clearlab.com
+        {% comment %} if (emailEl && emailEl.value === "shopify@clearlab.com") { {% endcomment %}
+        if (emailEl) {
+          localStorage.setItem('custom_field_default_email', emailEl.value);
+          localStorage.setItem('custom_field_default_address1', address1El?.value || "");
+          localStorage.setItem('custom_field_default_city', cityEl?.value || "");
+          localStorage.setItem('custom_field_default_country', countryEl?.value || "");
+          localStorage.setItem('custom_field_default_zip', zipEl?.value || "");
+          localStorage.setItem('custom_field_default_phone', phoneEl?.value || "");
+          localStorage.setItem('custom_field_default_first_name', firstNameEl?.value || "");
+          localStorage.setItem('custom_field_default_last_name', lastNameEl?.value || "");
+        }
+
+        console.log("Saved to localStorage ✅");
+
+        customerForm.submit();
+      });
+
+    }
   });
-</script>
+</script> 
 
+
+{% comment %} <script src="{{ 'province.js' | asset_url }}" defer></script> {% endcomment %}
 
 
 {% schema %}
