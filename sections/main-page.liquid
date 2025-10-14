@@ -21,6 +21,9 @@
   <div class="rte{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
     {{ page.content }}
   </div>
+  {% form 'customer_address', customer.new_address, id: 'address_form_new' %}
+  <!-- form content -->
+  {% endform %}
 </div>
 
 <script>
@@ -29,6 +32,8 @@
     const companyName = localStorage.getItem('custom_field_company');
     const companyNameMetafieldKey = localStorage.getItem('custom_field_company_number_metafield_key');
     const customerId = {{ customer.id | json }};
+    console.log('Company Name:', companyName);
+    console.log('Company companyNameMetafieldKey:', companyNameMetafieldKey);
     if(companyName) {
       console.log('Company Name:', companyName);
       sendMetafield(companyNameMetafieldKey, companyName, customerId);
@@ -46,8 +51,72 @@
       localStorage.removeItem('custom_field_client_number_metafield_key');
     }
 
+    if (document.querySelector("#address_form_new")) {
+      sendAddress();
+    }
   });
 
+  function sendAddress() {
+    console.log("sendAddress");
+    const clientAddress1 = localStorage.getItem('custom_field_default_address1');
+    const clientCity = localStorage.getItem('custom_field_default_city');
+    const clientCountry = localStorage.getItem('custom_field_default_country');
+    {% comment %} const clientProvince = localStorage.getItem('custom_field_default_province'); {% endcomment %}
+    const clientZip = localStorage.getItem('custom_field_default_zip');
+    const clientPhone = localStorage.getItem('custom_field_default_phone');
+    const clientEmail = localStorage.getItem('custom_field_default_email');
+    const clientFirstName = localStorage.getItem('custom_field_default_first_name');
+    const clientLastName = localStorage.getItem('custom_field_default_last_name');
+    const companyName = localStorage.getItem('custom_field_company') || '';
+
+    console.log(clientAddress1,clientCity,clientCountry,clientZip,clientPhone,clientEmail,clientFirstName,clientLastName,companyName);
+    // Only proceed if email matches and required fields exist
+    if (clientEmail && clientAddress1 && clientCity && clientCountry && clientZip) {
+      const addressForm = document.querySelector("#address_form_new");
+      if (!addressForm) {
+        console.error("Address form not found on page.");
+        return;
+      }
+
+      console.log("client email : ", clientEmail);
+      const formData = new FormData(addressForm);
+      formData.set('address[address1]', clientAddress1);
+      formData.set('address[city]', clientCity);
+      formData.set('address[country]', clientCountry);
+      {% comment %} formData.set('address[province]', clientProvince); {% endcomment %}
+      formData.set('address[zip]', clientZip);
+      formData.set('address[phone]', clientPhone || '');
+      formData.set('address[first_name]', clientFirstName || '');
+      formData.set('address[last_name]', clientLastName || '');
+      formData.set('address[company]', companyName);
+
+      fetch("/account/addresses", {
+        method: "POST",
+        body: formData,
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      })
+      .then(response => response.text())  // <- use text instead of json
+      .then(data => {
+        console.log("Address update response:", data);
+      })
+      .catch(error => console.error("Address update error:", error))
+      .finally(() => {
+        // Clean up localStorage
+        localStorage.removeItem('custom_field_default_address1');
+        localStorage.removeItem('custom_field_default_city');
+        localStorage.removeItem('custom_field_default_country');
+        {% comment %} localStorage.removeItem('custom_field_default_province'); {% endcomment %}
+        localStorage.removeItem('custom_field_default_zip');
+        localStorage.removeItem('custom_field_default_phone');
+        localStorage.removeItem('custom_field_default_email');
+        localStorage.removeItem('custom_field_default_first_name');
+        localStorage.removeItem('custom_field_default_last_name');
+      });
+
+    }
+  }
+
+ 
   function sendMetafield(metafieldKey, metafieldValue, customerId) {
     const namespace = 'custom';
 
@@ -65,7 +134,8 @@
       })
       .then(response => response.json())
       .then(data => {
-        console.log('Success:', data);
+        {% comment %} console.log('Success:', data); {% endcomment %}
+        {% comment %} sendAddress(); {% endcomment %}
       })
       .catch((error) => {
         console.error('Error:', error);

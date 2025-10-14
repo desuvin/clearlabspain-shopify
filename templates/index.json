@@ -9,6 +9,20 @@
  */
 {
   "sections": {
+    "clsg_video_banner_bF7bBb": {
+      "type": "clsg-video-banner",
+      "name": "Video + Image Slideshow",
+      "settings": {
+        "slide_1_type": "video",
+        "slide_1_video": "https://cdn.shopify.com/videos/c/o/v/4a2f92df97544cb2a1b28bae512334ef.mp4",
+        "slide_2_type": "image",
+        "slide_2_video": "",
+        "slide_2_image": "shopify://shop_images/B2B_main_banner_phantom_2025__monthly.jpg",
+        "slide_3_type": "image",
+        "slide_3_video": "",
+        "slide_3_image": "shopify://shop_images/B2B_main_banner_phantom_2025__daily.jpg"
+      }
+    },
     "image_banner": {
       "type": "image-banner",
       "blocks": {
@@ -142,6 +156,7 @@
         "slide_7gh4Wx",
         "slide_m3eBUW"
       ],
+      "disabled": true,
       "custom_css": [
         ".slideshow__slide {margin-top: 20px;}",
         ".slideshow__media {border-radius: 50px;}",
@@ -244,6 +259,7 @@
     }
   },
   "order": [
+    "clsg_video_banner_bF7bBb",
     "image_banner",
     "featured_collection",
     "slideshow_ynfUtj",

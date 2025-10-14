@@ -1,0 +1,145 @@
+{% schema %}
+{
+  "name": "Video Slideshow Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_1",
+      "label": "Video 1 URL (MP4)",
+      "default": "https://cdn.shopify.com/videos/c/o/v/4a2f92df97544cb2a1b28bae512334ef.mp4"
+    },
+    {
+      "type": "text",
+      "id": "video_2",
+      "label": "Video 2 URL (MP4)"
+    },
+    {
+      "type": "text",
+      "id": "video_3",
+      "label": "Video 3 URL (MP4)"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Slideshow Banner"
+    }
+  ]
+}
+{% endschema %}
+
+<div class="page-width">
+    <div class="video-slideshow">
+    <div class="slides">
+        {% for i in (1..3) %}
+        {% assign video_id = 'video_' | append: i %}
+        {% if section.settings[video_id] != blank %}
+            <div class="slide{% if forloop.first %} active{% endif %}">
+            <video autoplay muted loop playsinline>
+                <source src="{{ section.settings[video_id] }}" type="video/mp4">
+            </video>
+            </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+    {% comment %} <div class="controls">
+        <button class="prev" aria-label="Previous slide">‹</button>
+        <button class="next" aria-label="Next slide">›</button>
+    </div> {% endcomment %}
+    </div>
+</div>
+<style>
+.video-slideshow {
+  position: relative;
+  width: 100%;
+  max-width: var(--page-width, 1200px); /* Use your theme’s container width */
+  margin: 0 auto; /* Center it in the page */
+  border-radius: var(--radius-large, 16px); /* Optional: match theme rounding */
+  overflow: hidden;
+}
+
+.video-slideshow .slides {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Keeps responsive height */
+}
+
+.video-slideshow video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: inherit;
+}
+
+
+.video-slideshow .slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video-slideshow .slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.video-slideshow .slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.video-slideshow .controls {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  z-index: 3;
+}
+
+.video-slideshow button {
+  background: rgba(255, 255, 255, 0.4);
+  border: none;
+  color: #000;
+  font-size: 2rem;
+  width: 50px; height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.video-slideshow button:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const slides = document.querySelectorAll('.video-slideshow .slide');
+  const nextBtn = document.querySelector('.video-slideshow .next');
+  const prevBtn = document.querySelector('.video-slideshow .prev');
+  let current = 0;
+
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+  }
+
+  {% comment %} nextBtn.addEventListener('click', () => {
+    current = (current + 1) % slides.length;
+    showSlide(current);
+  });
+
+  prevBtn.addEventListener('click', () => {
+    current = (current - 1 + slides.length) % slides.length;
+    showSlide(current);
+  }); {% endcomment %}
+});
+</script>
+
