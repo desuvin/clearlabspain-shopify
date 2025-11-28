@@ -11,6 +11,7 @@
   "sections": {
     "clsg_video_banner_bF7bBb": {
       "type": "clsg-video-banner",
+      "disabled": true,
       "name": "Video + Image Slideshow",
       "settings": {
         "slide_1_type": "video",
@@ -96,10 +97,28 @@
     "slideshow_ynfUtj": {
       "type": "slideshow",
       "blocks": {
+        "slide_RkxQ4F": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/B2B_main_banner_phantom_2025__daily.jpg",
+            "heading": "",
+            "heading_size": "h1",
+            "subheading": "",
+            "button_label": "",
+            "link": "",
+            "button_style_secondary": false,
+            "box_align": "middle-center",
+            "show_text_box": false,
+            "text_alignment": "center",
+            "image_overlay_opacity": 0,
+            "color_scheme": "scheme-1",
+            "text_alignment_mobile": "center"
+          }
+        },
         "slide_CCWjR3": {
           "type": "slide",
           "settings": {
-            "image": "shopify://shop_images/slide2.png",
+            "image": "shopify://shop_images/B2B_main_banner_phantom_2025__monthly.jpg",
             "heading": "",
             "heading_size": "h2",
             "subheading": "",
@@ -152,11 +171,11 @@
         }
       },
       "block_order": [
+        "slide_RkxQ4F",
         "slide_CCWjR3",
         "slide_7gh4Wx",
         "slide_m3eBUW"
       ],
-      "disabled": true,
       "custom_css": [
         ".slideshow__slide {margin-top: 20px;}",
         ".slideshow__media {border-radius: 50px;}",
