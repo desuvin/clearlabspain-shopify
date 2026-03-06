@@ -254,6 +254,7 @@
       var countCombination = 0;
       var productSelector = document.getElementById('product-selector').value;
       var productColor = document.getElementById('product-color').value;
+      disableSubmitButton();
       if(productColor == ''){
         alert('Please select a color');
       } else {
@@ -261,6 +262,7 @@
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
+            enableSubmitButton();
             return response.json();
           })
           .then(product => {
@@ -279,8 +281,10 @@
             } else {
               alert('That Product Combination is not available!');
             }
+            enableSubmitButton();
           })
           .catch(error => {
+            enableSubmitButton();
             console.error('There was a problem with the fetch operation:', error);
           });
          
