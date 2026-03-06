@@ -79,3 +79,13 @@ function afterSubmit(){
   }
   openModalCart();
 }
+
+function enableSubmitButton(){
+  var submitButton = document.getElementById('add-to-cart-button');
+  submitButton.disabled = false;
+}
+
+function disableSubmitButton(){
+  var submitButton = document.getElementById('add-to-cart-button');
+  submitButton.disabled = true;
+}

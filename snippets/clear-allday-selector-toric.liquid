@@ -325,6 +325,7 @@
       var productSelector = document.getElementById('product-selector').value;
       var productCylinder = document.getElementById('product-cylinder').value;
       var productAxis = document.getElementById('product-axis').value;
+      disableSubmitButton();
       if(productSelector == ''){
         alert('Please select a power');
       } else {
@@ -332,6 +333,7 @@
             if (!response.ok) {
               throw new Error('Network response was not ok');
             }
+            enableSubmitButton();
             return response.json();
           })
           .then(product => {
@@ -350,9 +352,11 @@
             } else {
               alert('That Product Combination is not available!');
             }
+            enableSubmitButton();
           })
           .catch(error => {
             alert('That Product Combination is not available!');
+            enableSubmitButton();
             console.error('There was a problem with the fetch operation:', error);
           });
          
