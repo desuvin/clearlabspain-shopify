@@ -13,9 +13,9 @@
         {% endif %}
       </div>
       <div class="ship-to-container">
-        {{ assign locale_country = '' }}
+        {{ assign }}
         <!-- Realizar pedido -->
-        {{ assign checkout_button_text = '' }}
+        {{ assign }}
         {% if shop.locale == "es" %}
           {% assign locale_country = 'España' %}
           {% assign checkout_button_text = 'Realizar Pedido' %}
@@ -199,3 +199,16 @@
     </div>
   </div>
 </div>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{{ assign locale_country = '' }}"
+  to: "{{ assign }}"
+  position: 580..592
+- from: "{{ assign checkout_button_text = '' }}"
+  to: "{{ assign }}"
+  position: 634..646
+{% endcomment %}

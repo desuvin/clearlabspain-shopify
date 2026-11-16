@@ -289,8 +289,7 @@
   <body class="gradient{% if settings.animations_hover_elements != 'none' %} animate--hover-{{ settings.animations_hover_elements }}{% endif %}">
     <!-- {% if customer %}
       
-    {% elsif request.path != '/account/login' and request.path != '/account/register' and request.path != '/account/recover' and request.path != '/checkout' 
-      and request.path contains '/account/activate' == false %}
+    {% elsif request.path != '/account/login' and request.path != '/account/register' and request.path != '/account/recover' and request.path != '/checkout' and request.path contains '/account/activate' %}
       <script>
         window.location.href = "/account/login";
       </script>
@@ -416,3 +415,17 @@
     {%- endif -%}
   </body>
 </html>
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: "{% elsif request.path != '/account/login' and request.path != '/account/register'
+    and request.path != '/account/recover' and request.path != '/checkout' \n      and
+    request.path contains '/account/activate' == false %}"
+  to: "{% elsif request.path != '/account/login' and request.path != '/account/register'
+    and request.path != '/account/recover' and request.path != '/checkout' and request.path
+    contains '/account/activate' %}"
+  position: 17643..17844
+{% endcomment %}
