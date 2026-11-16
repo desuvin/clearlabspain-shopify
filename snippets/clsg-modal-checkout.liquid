@@ -46,7 +46,7 @@
           <!-- <a href="#" class="display-show-trigger" data-container-target="container-new-address">Use a different address</a> -->
         </div>
         <div class="select">
-          <select class="select__select shipping-selector" id="selection-shipping" onchange="setShipping()">
+          <select class="select__select shipping-selector" id="selection-shipping" onchange="setShipping()" disabled>
             {% for address in customer.addresses %}
               {% comment %} {%- if address.country != locale_country -%}
                 {% continue %}
